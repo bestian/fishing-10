@@ -6,17 +6,19 @@
     
     .ui.list.container(v-if="step == 0")
       .item.ui.header(v-for = "n in [1,2,3,4,5,6,7,8,9]") {{n}} + {{10-n}} = 10
-    
+
     .ui.grid.container(v-if="step > 0")
       .ui.three.column.row
         .ui.column(v-for = "(i, idx) in items")
           a(v-bind:class="{'last' : lastIdx1 == idx || lastIdx2 == idx, 'done' : dones[idx], pick: idx == myIdx}", @click="pick(i, idx)")
-            | {{i}}
+            span(v-show = "opens[idx]") {{i}}
+            span(v-show = "!opens[idx]") ? 
+
 </template>
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Fishing',
   props: {
   },
   data () {
