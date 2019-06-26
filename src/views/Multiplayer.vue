@@ -1,9 +1,17 @@
 <template lang="pug">
   .hello
-    h1 湊十釣魚
-    .ui.huge.green.button(v-if = "step == 0" @click="reset()") 按此開始
-    h2 {{ lastWork }}
+    .ui.form(v-show="step == 0")
+      .field
+        label 玩家人數
+        input(type="number", min = "2", max = "10", step = "1" v-model = "playerNums")
+        button.ui.huge.green.button(@click = "reset()") 開始玩!!
     .ui.grid.container(v-if="step > 0")
+      .ui.row
+        .ui.center.aligned.column
+          h2 輪到玩家 {{ turn+1 }}了
+          h2 {{ lastWork }}
+      .ui.two.column.row
+        .column(v-for = "(p, idx) in players") 玩家{{ idx + 1 }}: 目前 {{ p }} 分
       .ui.three.column.row
         .ui.column(v-for = "(i, idx) in items")
           a(v-bind:class="{'last' : lastIdx1 == idx || lastIdx2 == idx, 'done' : dones[idx], pick: idx == myIdx}", @click="pick(i, idx)")
@@ -14,12 +22,15 @@
 
 <script>
 export default {
-  name: 'HelloWorld',
+  name: 'Multiplayer',
   props: {
   },
   data () {
     return {
+      playerNums: 2,
+      players: [],
       step: 0,
+      turn: 0,
       hand: undefined,
       myIdx: undefined,
       lastWork: '',
@@ -37,7 +48,10 @@ export default {
   methods: {
     reset () {
       this.step = 1;
-      this.items.sort(() => {return Math.random() - 0.5})
+      this.items.sort(() => {return Math.random() - 0.5});
+      for (var i = 0; i < this.playerNums; i++) {
+        this.players.push(0)
+      }
     },
     done (a, b) {
       this.dones[a] = true;
